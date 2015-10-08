@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import sys, os, traceback
 import time
 from shell import shell
@@ -101,7 +103,7 @@ def run_applescript_command(commands):
             print c
             print command_str
             # run a subprocess to tail the out file so that output is shown in realtime to the console
-            tail_process, command_starttime, command_process_stdout, command_process_stderr = run_subprocess('/bin/bash', ['-l', '-c', 'sleep 1; tail -f %s' %cmd_out_read_path], daemon=True, return_std=True)
+            tail_process, command_starttime, command_process_stdout, command_process_stderr = run_subprocess('/bin/bash', ['-l', '-c', 'while [ ! -f {path} ]; do sleep 2; done; tail -f {path}'.format(path=cmd_out_read_path)], daemon=True, return_std=True)
             return_code = os.system(command_str)
             if not c.has_key('ignore_output') or not c['ignore_output']:
                 wait_for_file(cmd_out_read_path)
